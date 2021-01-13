@@ -1,7 +1,6 @@
 package com.wzs.multidatasource.mapper;
 
-import com.wzs.multidatasource.annotation.DataSource;
-import com.wzs.multidatasource.enums.DataSourceType;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,10 +13,9 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface TestMapper {
 
-    @Select("select count(1) from bom")
+    @Select("select count(1) from user")
     int findCount();
 
-    @DataSource(DataSourceType.SALVE)
-    @Select("select count(1) from mes_dict")
-    int findCount2();
+    @Insert("insert into user (name) value ('wgs')")
+    int insertUser();
 }

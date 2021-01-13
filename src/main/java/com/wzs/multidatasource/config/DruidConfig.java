@@ -10,6 +10,8 @@ import com.wzs.multidatasource.utils.SpringUtils;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
@@ -30,6 +32,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Configuration
+@MapperScan(basePackages = "com.wzs.multidatasource.mapper", sqlSessionTemplateRef  = "sqlSessionTemplate")
 public class DruidConfig {
 
     @Bean
@@ -100,7 +103,7 @@ public class DruidConfig {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactoryTwo(DataSource dataSourceTwo) throws Exception {
+    public SqlSessionFactory sqlSessionFactoryTwo(@Qualifier("dataSourceTwo") DataSource dataSourceTwo) throws Exception {
         return createSqlSessionFactory(dataSourceTwo);
     }
 
@@ -117,16 +120,17 @@ public class DruidConfig {
         configuration.setMapUnderscoreToCamelCase(true);
         configuration.setLogImpl(StdOutImpl.class);
         sqlSessionFactoryBean.setConfiguration(configuration);
-//        PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
-//        sqlSessionFactoryBean
+
+        PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
+        sqlSessionFactoryBean.setMapperLocations(patternResolver.getResources("classpath:config/**/*.xml"));
         return sqlSessionFactoryBean.getObject();
     }
 
     @Bean
-    public CustomSqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactoryOne,SqlSessionFactory sqlSessionFactoryTwo) {
+    public CustomSqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactoryOne,@Qualifier("sqlSessionFactoryTwo") SqlSessionFactory sqlSessionFactoryTwo) {
         HashMap<Object, SqlSessionFactory> sqlSessionFactoryHashMap = new HashMap<>();
-        sqlSessionFactoryHashMap.put(DataSourceType.MASTER,sqlSessionFactoryOne);
-        sqlSessionFactoryHashMap.put(DataSourceType.SALVE,sqlSessionFactoryTwo);
+        sqlSessionFactoryHashMap.put(DataSourceType.MASTER.name(),sqlSessionFactoryOne);
+        sqlSessionFactoryHashMap.put(DataSourceType.SALVE.name(),sqlSessionFactoryTwo);
         CustomSqlSessionTemplate customSqlSessionTemplate = new CustomSqlSessionTemplate(sqlSessionFactoryOne);
         customSqlSessionTemplate.setTargetSqlSessionFactories(sqlSessionFactoryHashMap);
         return customSqlSessionTemplate;

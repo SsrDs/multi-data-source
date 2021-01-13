@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wzs.multidatasource.mapper.TestMapper2">
+    <select id="findCount2" resultType="java.lang.Integer">
+        select count(1) from user ;
+    </select>
+    <insert id="insertUser2" useGeneratedKeys="true" keyProperty="id">
+        insert into user (name) value ('fsd')
+    </insert>
+
+    <update id="create">
+        CREATE TABLE `tgs` (
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+    </update>
+</mapper>

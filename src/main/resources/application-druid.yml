@@ -6,16 +6,16 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://10.10.8.49:3306/fusion?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: root
-        password: Admin@123456
+        password: root
       # 从库数据源
       salve:
         # 从数据源开关/默认关闭
         enabled: true
-        url: jdbc:mysql://10.10.8.49:3306/fusionmes?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: root
-        password: Admin@123456
+        password: root
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
